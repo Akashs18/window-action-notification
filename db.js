@@ -6,6 +6,7 @@ const pool = new Pool({
   database: "firstdemo_examle", // your database
   password: "6LBDu09slQHqq3r0GcwbY1nPera4H5Kk",    // your PG password
   port: 5432,
+   ssl: { rejectUnauthorized: false }
 });
 
 pool.connect()

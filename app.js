@@ -3,6 +3,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const db = require("./db");
+const attendanceRouter = require("./routes/attendance");
 
 const app = express();
 
@@ -29,6 +30,8 @@ function checkAuth(req, res, next) {
   if (req.session.employeeId) next();
   else res.redirect("/login");
 }
+
+app.use("/attendance", attendanceRouter);
 
 // ===== ROUTES =====
 

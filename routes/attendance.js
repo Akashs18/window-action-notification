@@ -1,22 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const pool = require("../db"); // your PostgreSQL connection
 
-// Apply leave
-router.get("/apply", (req, res) => res.render("apply_leave"));
+// Middleware to check if user is logged in
+function checkAuth(req, res, next) {
+  if (req.session.employeeId) next();
+  else res.redirect("/login");
+}
 
-router.post("/apply", (req, res) => {
-  const { start_date, end_date, reason } = req.body;
-  const employeeId = req.session.employeeId;
+// GET attendance page
+router.get("/", checkAuth, async (req, res) => {
+  try {
+    // Fetch attendance for logged-in employee
+    const result = await pool.query(
+      "SELECT * FROM attendance WHERE employee_id = $1 ORDER BY date DESC",
+      [req.session.employeeId]
+    );
+    res.render("attendance", { attendance: result.rows });
+  } catch (err) {
+    console.error(err);
+    res.send("Error fetching attendance");
+  }
+});
 
-  db.query(
-    "INSERT INTO leave_requests (employee_id, start_date, end_date, reason, status) VALUES ($1, $2, $3, $4, 'Pending')",
-    [employeeId, start_date, end_date, reason],
-    (err) => {
-      if (err) throw err;
-      res.send("Leave applied successfully!");
-    }
-  );
+// POST mark attendance (optional)
+router.post("/mark", checkAuth, async (req, res) => {
+  try {
+    const today = new Date();
+    await pool.query(
+      "INSERT INTO attendance(employee_id, date, status) VALUES($1, $2, $3)",
+      [req.session.employeeId, today, "Present"]
+    );
+    res.redirect("/attendance");
+  } catch (err) {
+    console.error(err);
+    res.send("Error marking attendance");
+  }
 });
 
 module.exports = router;
