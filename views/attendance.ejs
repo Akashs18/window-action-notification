@@ -1,7 +1,14 @@
 <%- include("partials/header") %>
 
 <div class="container mt-5">
-  <h2>Your Attendance</h2>
+  <h2>Attendance</h2>
+
+  <form method="post" action="/attendance/mark">
+    <button class="btn btn-success"
+      <%= markedToday ? "disabled" : "" %>>
+      Mark Attendance
+    </button>
+  </form>
 
   <table class="table table-bordered mt-3">
     <thead>
@@ -11,21 +18,18 @@
       </tr>
     </thead>
     <tbody>
-      <% if (attendance.length === 0) { %>
-        <tr><td colspan="2">No attendance records found</td></tr>
+      <% if (records.length === 0) { %>
+        <tr><td colspan="2">No records</td></tr>
       <% } %>
-      <% attendance.forEach(record => { %>
+
+      <% records.forEach(r => { %>
         <tr>
-          <td><%= new Date(record.date).toLocaleDateString() %></td>
-          <td><%= record.status %></td>
+          <td><%= r.attendance_date %></td>
+          <td><%= r.status %></td>
         </tr>
       <% }) %>
     </tbody>
   </table>
-
-  <form method="post" action="/attendance/mark">
-    <button class="btn btn-primary">Mark Attendance</button>
-  </form>
 </div>
 
 <%- include("partials/footer") %>
