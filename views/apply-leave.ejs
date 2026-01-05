@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+<div class="card mx-auto mt-5" style="max-width:500px;">
+  <div class="card-body">
+    <h2 class="text-center mb-4">Apply Leave</h2>
+    <form method="post" action="/leave/apply">
+      <div class="mb-3">
+        <label>Start Date</label>
+        <input type="date" name="start_date" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label>End Date</label>
+        <input type="date" name="end_date" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label>Reason</label>
+        <input type="text" name="reason" class="form-control" required>
+      </div>
+      <button class="btn btn-success w-100">Apply</button>
+    </form>
+  </div>
+</div>
+<%- include("partials/footer") %>
